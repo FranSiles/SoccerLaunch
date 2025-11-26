@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: f88a252d8b7c04a96aff8789079caccf
+timeCreated: 1443084384
+licenseType: Store
+DefaultImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 18290
+  packageName: SuperGoalKeeper
+  packageVersion: 2.0.2
+  assetPath: Assets/supergoalkeeper/game_core/src/crono.svg
+  uploadId: 297462

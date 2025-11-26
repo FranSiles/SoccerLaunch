@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: b9f5529717fdc4e1ea0b770d1d3aa837
+timeCreated: 1447146789
+licenseType: Store
+DefaultImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 18290
+  packageName: SuperGoalKeeper
+  packageVersion: 2.0.2
+  assetPath: Assets/supergoalkeeper/src/artwork_player_gloves.svg
+  uploadId: 297462

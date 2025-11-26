@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: f832c2d86c488404786e0bee66ec0a4d
+timeCreated: 1447146780
+licenseType: Store
+DefaultImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 18290
+  packageName: SuperGoalKeeper
+  packageVersion: 2.0.2
+  assetPath: Assets/supergoalkeeper/src/artwork_UI.svg
+  uploadId: 297462
