@@ -16,8 +16,8 @@ public class EnemyController : MonoBehaviour
 
     private void Awake()
     {
-        checkColision = transform.GetChild(0);
-        layer = LayerMask.GetMask("Limit");
+        checkColision = transform.GetChild(1);
+        layer = LayerMask.GetMask("Ground");
     }
     private void Update()
     {
@@ -26,9 +26,8 @@ public class EnemyController : MonoBehaviour
     private void GoalKeeperMove()
     {
         //detects ceil or floor
-        if (GeneralDetection(1f, direction, Color.magenta))
+        if (GeneralDetection(0.5f, direction, Color.magenta))
         {
-            Debug.Log("COLISION DETECTADA");
             direction = -direction;
         }
             transform.position += (Vector3)direction * moveSpeed * Time.deltaTime;

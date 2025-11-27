@@ -83,13 +83,13 @@ public class LaunchManager : MonoBehaviour
         }
 
         //Go to the end scene after the ball had time to interact
-        Invoke(nameof(GoToEndScene), goToEndSceneDelay);
+        //Invoke(nameof(GoToEndScene), goToEndSceneDelay);
 
     }
 
-    private void GoToEndScene()
+    /*private void GoToEndScene()
     {
         SceneManager.LoadScene("EndGame");        
-    }
+    }*/
 
 }
