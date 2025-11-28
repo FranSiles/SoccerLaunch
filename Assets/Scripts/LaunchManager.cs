@@ -19,6 +19,7 @@ public class LaunchManager : MonoBehaviour
     private Camera mainCamera;
     private Rigidbody2D ballRb;
     private SpringJoint2D springJoint2D;
+    private Vector3 initialPos;
 
     private bool isDragging;
 
@@ -29,7 +30,7 @@ public class LaunchManager : MonoBehaviour
 
         ballRb = GetComponent<Rigidbody2D>();
         springJoint2D = GetComponent<SpringJoint2D>();
-
+        initialPos = transform.position;
     }
 
     private void Update()
@@ -79,7 +80,6 @@ public class LaunchManager : MonoBehaviour
         if (springJoint2D != null)
         {
             springJoint2D.enabled = false; //Cut the connection with the pivot
-            springJoint2D = null;
         }
 
         //Go to the end scene after the ball had time to interact
@@ -91,5 +91,21 @@ public class LaunchManager : MonoBehaviour
     {
         SceneManager.LoadScene("EndGame");        
     }*/
+    public void ResetBall()
+    {
+        ballRb = GetComponent<Rigidbody2D>();
+        // Restaurar posici�n
+        transform.position = initialPos;
+
+        // Restaurar f�sica
+        ballRb.linearVelocity = Vector2.zero;
+        ballRb.angularVelocity = 0f;
+        ballRb.bodyType = RigidbodyType2D.Kinematic;
+
+        // Restaurar el muelle
+        springJoint2D.enabled = true;
+
+        // Permitir arrastrar otra vez
+    }
 
 }

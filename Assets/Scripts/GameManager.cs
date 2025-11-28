@@ -10,6 +10,9 @@ public class GameManager : MonoBehaviour
     //Singleton public read-only
     public static GameManager Instance { get; private set; }
 
+    [Header("attempts for the level")]
+    [SerializeField] private int attempts;
+
     private int score;
     private int kegelNumber;
 
@@ -19,6 +22,8 @@ public class GameManager : MonoBehaviour
 
     [HideInInspector]
     public int KegelNumber => kegelNumber;
+
+    public int Attempts { get => attempts; set => attempts = value; }
 
     private void Awake()
     {
