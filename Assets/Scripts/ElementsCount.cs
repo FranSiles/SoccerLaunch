@@ -2,8 +2,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 /// <summary>
-/// Counts how many kegels are inside this trigger area and reports it to the GameManager
-/// Requires a 2D trigger collider 
+/// Activate when the ball pass the goalkeeper
 /// </summary>
 public class ElementsCount : MonoBehaviour
 {
@@ -12,12 +11,8 @@ public class ElementsCount : MonoBehaviour
     {
         if (collision.CompareTag("Ball"))
         {
-            GoToEndScene();
+            GameManager.Instance.ActivateWinPanel();
         }
-    }
-    private void GoToEndScene()
-    {
-        SceneManager.LoadScene("EndGame");        
     }
 
 }

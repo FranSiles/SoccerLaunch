@@ -8,7 +8,7 @@ public class LoseAttempt : MonoBehaviour
         if (collision.CompareTag("Ball"))
         {
             ballCollider = collision;
-            Invoke("Lose",0.5f);
+            Invoke("Lose",0.2f);
             
         }
     }

@@ -12,9 +12,9 @@ public class EndGameManager : MonoBehaviour
 
     private void Start()
     {
-        string finalMessage = $"SCORE : {GameManager.Instance.Score}/{GameManager.Instance.KegelNumber}";
+        string finalMessage = $"SCORE : {GameManager.Instance.Score}";
 
-        finalMessage += GameManager.Instance.Score == GameManager.Instance.KegelNumber ? "\n\nYOU WIN!!!" : "\n\nGAME OVER!!";
+        finalMessage += GameManager.Instance.Score  + "\n\nYOU WIN!!!";
 
         textResult.text = finalMessage;
     }

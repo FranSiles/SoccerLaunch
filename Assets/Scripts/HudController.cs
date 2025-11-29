@@ -16,5 +16,4 @@ public class HudController : MonoBehaviour
     {
         textAttempts.text = "Attempts:" + GameManager.Instance.Attempts.ToString("00");
     }
-
 }

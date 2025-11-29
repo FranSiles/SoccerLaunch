@@ -1,70 +1,121 @@
+using Newtonsoft.Json.Bson;
+using TMPro;
+using UnityEditor.SearchService;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 /// <summary>
-/// Keeps the game state (score and total kegels) across scenes
-/// Singleton pattern + DontDestroyOnLoad so can be read in other scenes
+/// Control all about score and endlevel
 /// </summary>
-[DefaultExecutionOrder(-100)] //Ensure this initialize before other scripts 
+ //Ensure this initialize before other scripts 
 public class GameManager : MonoBehaviour
 {
-    //Singleton public read-only
-    public static GameManager Instance { get; private set; }
+    public static GameManager Instance;
 
-    [Header("attempts for the level")]
+    [Header("attempts for the level and points per attempts")]
     [SerializeField] private int attempts;
+    [SerializeField] private int pointsPerAttempts;
+
+    [Header("Panels of endgame")]
+    [SerializeField] private GameObject panelWin;
+    [SerializeField] private GameObject panelLose;
+    [SerializeField] private GameObject pausePanel;
+    [SerializeField] private GameObject pauseButton;
+
+    [Header("Text for panels")]
+    [SerializeField] private TextMeshProUGUI pointswin;
 
     private int score;
-    private int kegelNumber;
-
-    //public Read-only accesors
-    [HideInInspector]
-    public int Score => score;
-
-    [HideInInspector]
-    public int KegelNumber => kegelNumber;
+    private bool endlevel=false;
 
     public int Attempts { get => attempts; set => attempts = value; }
+    public int Score { get => score; set => score = value; }
+    public int PointsPerAttempts { get => pointsPerAttempts; set => pointsPerAttempts = value; }
 
     private void Awake()
     {
-        //Singleton
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject); //There is already one, remove duplicates
-            return;
-        }
-
+        //create the singleton
         Instance = this;
-        DontDestroyOnLoad(gameObject); //Persist between scenes
-
     }
-
-    /// <summary>
-    /// Sets the total number of Kegels at the start of the level
-    /// </summary>
-    /// <param name="total"></param>
-    public void SetKegelNumber(int total)
+    private void Update()
     {
-        kegelNumber = total;
+        if (attempts<=0 && !endlevel)
+        {
+            ActivateLosePanel();
+        }
     }
 
-    /// <summary>
-    /// Sets the score, used when the kegel enters in the win box area
-    /// </summary>
-    /// <param name="value"></param>
-    public void SetScore(int value)
-    {
-        score = value;
-    }
-
-    /// <summary>
-    /// Reset the game values
-    /// </summary>
     public void ResetGame()
     {
         score = 0;
-        kegelNumber = 0;
     }
+    public void ActivateWinPanel()
+    {
+        Time.timeScale = 0;
+        panelWin.SetActive(true);
+        score = pointsPerAttempts * attempts;
+        
+        pointswin.text="Score: "+score.ToString("0000");
 
+    }
+    private void ActivateLosePanel()
+    {
+        Time.timeScale=0;
+        panelLose.SetActive(true);
+    }
+    public void nextLevel()
+    {
+        //total number of levels
+        int currentLevel = int.Parse(SceneManager.GetActiveScene().name.Substring(5));
+        CheckRecordPoints(currentLevel);
+        switch (currentLevel)
+        {
+            case 1:
+                SceneManager.LoadScene("Level2");
+            break;
+            case 2:
+                SceneManager.LoadScene("Level3");
+            break;
+        }
+    }
+    public void PlayAgain()
+    {
+        int currentLevel = int.Parse(SceneManager.GetActiveScene().name.Substring(5));
+        Time.timeScale = 1;
+        endlevel=true;
+        CheckRecordPoints(currentLevel);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+    public void Continue()
+    {
+        Time.timeScale = 1;
+        pauseButton.SetActive(true);
+        pausePanel.SetActive(false);
+    }
+    public void Pause()
+    {
+        Time.timeScale = 0;
+        pausePanel.SetActive(true);
+        pauseButton.SetActive(false);
+    }
+    public void Restart()
+    {
+        Time.timeScale = 1;
+        pauseButton.SetActive(true);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+    private void CheckRecordPoints(int level)
+    {
+        string key = "HighScore_Level" + level;
+        int highScore = PlayerPrefs.GetInt(key, 0000);//Put value 0 if not exist a value
+        if (score > highScore)
+        {
+            PlayerPrefs.SetInt(key, score);
+        }
+    }
+    public void SelectLevel()
+    {
+        SceneManager.LoadScene("SelectLevel");
+    }
 
 }

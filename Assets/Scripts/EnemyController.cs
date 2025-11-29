@@ -17,7 +17,7 @@ public class EnemyController : MonoBehaviour
     private void Awake()
     {
         checkColision = transform.GetChild(1);
-        layer = LayerMask.GetMask("Ground");
+        layer = LayerMask.GetMask("Limit");
     }
     private void Update()
     {

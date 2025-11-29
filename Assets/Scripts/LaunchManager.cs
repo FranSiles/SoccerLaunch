@@ -3,6 +3,7 @@ using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using UnityEngine.UIElements;
 
 
 /// <summary>
@@ -15,6 +16,8 @@ public class LaunchManager : MonoBehaviour
     private float disableStringJointTime = 0.15f;
     [SerializeField, Tooltip("Delay before moving to the end scene after the spring is cut")]
     private float goToEndSceneDelay = 3.5f;
+    [SerializeField] private Transform pivot;
+    [SerializeField] private float maxDragDistance = 2f;
 
     private Camera mainCamera;
     private Rigidbody2D ballRb;
@@ -45,18 +48,34 @@ public class LaunchManager : MonoBehaviour
             isDragging = false;
             return;
         }
-
-        //start/continue dragging: take physics control
-        isDragging = true;
-        ballRb.bodyType = RigidbodyType2D.Kinematic;
-
         //Read point/touch position, convert to world, keep z=0 for 2D
         Vector2 screenPos = Touchscreen.current.primaryTouch.position.ReadValue();
         Vector3 worldPos = mainCamera.ScreenToWorldPoint(screenPos);
         worldPos.z = 0f;
+        //start/continue dragging: take physics control
+        if (!isDragging)
+        {
+            float distanceToPivot = Vector3.Distance(worldPos, pivot.position);
+            if (distanceToPivot > maxDragDistance)
+            {
+                return;
+            }
+            isDragging = true;
+        }
 
+        
         //Move the rigidbody to follow the finger/mouse
-        ballRb.position = worldPos;
+        if (isDragging)
+        {
+            //Limit the movement of ball
+            Vector3 direction = worldPos - pivot.position;
+            if (direction.magnitude > maxDragDistance)
+            {
+                direction = direction.normalized * maxDragDistance;
+            }
+
+            ballRb.position = pivot.position + direction;
+        }
     }
 
     /// <summary>
@@ -94,18 +113,16 @@ public class LaunchManager : MonoBehaviour
     public void ResetBall()
     {
         ballRb = GetComponent<Rigidbody2D>();
-        // Restaurar posici�n
+        
         transform.position = initialPos;
 
-        // Restaurar f�sica
+
         ballRb.linearVelocity = Vector2.zero;
         ballRb.angularVelocity = 0f;
         ballRb.bodyType = RigidbodyType2D.Kinematic;
 
-        // Restaurar el muelle
         springJoint2D.enabled = true;
 
-        // Permitir arrastrar otra vez
     }
 
 }
