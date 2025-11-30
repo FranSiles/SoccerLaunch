@@ -36,6 +36,8 @@ public class GameManager : MonoBehaviour
     {
         //create the singleton
         Instance = this;
+        AudioManager.Instance.StopBackground();
+        AudioManager.Instance.PlayStadiumSoundPlay();
     }
     private void Update()
     {
@@ -51,23 +53,32 @@ public class GameManager : MonoBehaviour
     }
     public void ActivateWinPanel()
     {
+        AudioManager.Instance.StopStadium();
+        AudioManager.Instance.PlayBackgroundPlay();
         Time.timeScale = 0;
         panelWin.SetActive(true);
         score = pointsPerAttempts * attempts;
         
         pointswin.text="Score: "+score.ToString("0000");
+        pauseButton.SetActive(false);
 
     }
     private void ActivateLosePanel()
     {
+        AudioManager.Instance.StopStadium();
+        AudioManager.Instance.PlayBackgroundPlay();
         Time.timeScale=0;
         panelLose.SetActive(true);
+        pauseButton.SetActive(false);
     }
     public void nextLevel()
     {
+        AudioManager.Instance.StopGoal();
+        CheckMaxLevel();
         //total number of levels
         int currentLevel = int.Parse(SceneManager.GetActiveScene().name.Substring(5));
         CheckRecordPoints(currentLevel);
+        Time.timeScale = 1;
         switch (currentLevel)
         {
             case 1:
@@ -80,6 +91,8 @@ public class GameManager : MonoBehaviour
     }
     public void PlayAgain()
     {
+        CheckMaxLevel();
+        AudioManager.Instance.StopGoal();
         int currentLevel = int.Parse(SceneManager.GetActiveScene().name.Substring(5));
         Time.timeScale = 1;
         endlevel=true;
@@ -88,12 +101,16 @@ public class GameManager : MonoBehaviour
     }
     public void Continue()
     {
+        AudioManager.Instance.StopBackground();
+        AudioManager.Instance.PlayStadiumSoundPlay();
         Time.timeScale = 1;
         pauseButton.SetActive(true);
         pausePanel.SetActive(false);
     }
     public void Pause()
     {
+        AudioManager.Instance.StopStadium();
+        AudioManager.Instance.PlayBackgroundPlay();
         Time.timeScale = 0;
         pausePanel.SetActive(true);
         pauseButton.SetActive(false);
@@ -106,16 +123,66 @@ public class GameManager : MonoBehaviour
     }
     private void CheckRecordPoints(int level)
     {
-        string key = "HighScore_Level" + level;
-        int highScore = PlayerPrefs.GetInt(key, 0000);//Put value 0 if not exist a value
+        int highScore=0;
+        switch (level)
+        {
+            case 1:
+                 highScore = PlayerPrefs.GetInt(GameConstants.HIGHSCORELevel1_KEY, 0000);//Put value 0 if not exist a value
+            break;
+            case 2:
+                 highScore = PlayerPrefs.GetInt(GameConstants.HIGHSCORELevel2_KEY, 0000);//Put value 0 if not exist a value
+            break;
+            case 3:
+                highScore = PlayerPrefs.GetInt(GameConstants.HIGHSCORELevel3_KEY, 0000);//Put value 0 if not exist a value
+            break;
+        }
         if (score > highScore)
         {
-            PlayerPrefs.SetInt(key, score);
+            switch (level)
+            {
+                case 1:
+                    PlayerPrefs.SetInt(GameConstants.HIGHSCORELevel1_KEY, score);
+                break;
+                case 2:
+                    PlayerPrefs.SetInt(GameConstants.HIGHSCORELevel2_KEY, score);
+                break;
+                case 3:
+                    PlayerPrefs.SetInt(GameConstants.HIGHSCORELevel3_KEY, score);
+                break;
+            }
+           
         }
     }
     public void SelectLevel()
     {
+        int currentLevel = int.Parse(SceneManager.GetActiveScene().name.Substring(5));
+        CheckMaxLevel();
+        Time.timeScale = 1;
+        CheckRecordPoints(currentLevel);
+        AudioManager.Instance.StopGoal();
         SceneManager.LoadScene("SelectLevel");
+    }
+
+    /// <summary>
+    /// Check Max Level
+    /// </summary>
+    void CheckMaxLevel()
+    {
+        //ask for the current level
+        int currentLevel = int.Parse(SceneManager.GetActiveScene().name.Substring(5));
+        //Save the next Level for the first time
+        if (!PlayerPrefs.HasKey(GameConstants.MAXLEVEL_KEY))
+        {
+            PlayerPrefs.SetInt(GameConstants.MAXLEVEL_KEY, currentLevel + 1);
+        }
+        else
+        {
+            if (PlayerPrefs.GetInt(GameConstants.MAXLEVEL_KEY) < currentLevel + 1)
+            {
+                PlayerPrefs.SetInt(GameConstants.MAXLEVEL_KEY, currentLevel + 1);
+            }
+
+        }
     }
 
 }

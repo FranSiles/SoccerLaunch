@@ -11,6 +11,8 @@ public class ElementsCount : MonoBehaviour
     {
         if (collision.CompareTag("Ball"))
         {
+            AudioManager.Instance.PlayNetFootballSound();
+            AudioManager.Instance.PlayGoalSound();
             GameManager.Instance.ActivateWinPanel();
         }
     }

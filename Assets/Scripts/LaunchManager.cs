@@ -14,8 +14,6 @@ public class LaunchManager : MonoBehaviour
     [Header("Settings")]
     [SerializeField, Tooltip("Delay before disabling the spring after releasing the ball")]
     private float disableStringJointTime = 0.15f;
-    [SerializeField, Tooltip("Delay before moving to the end scene after the spring is cut")]
-    private float goToEndSceneDelay = 3.5f;
     [SerializeField] private Transform pivot;
     [SerializeField] private float maxDragDistance = 2f;
 
@@ -83,6 +81,7 @@ public class LaunchManager : MonoBehaviour
     /// </summary>
     private void LaunchBall()
     {
+        AudioManager.Instance.PlayKicBallSound();
         ballRb.bodyType = RigidbodyType2D.Dynamic; //React to physics again
         ballRb = null;
         Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Ball"),LayerMask.NameToLayer("Ground"),true);

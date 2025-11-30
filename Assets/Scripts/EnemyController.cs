@@ -1,4 +1,6 @@
+using UnityEditorInternal.Profiling.Memory.Experimental.FileFormat;
 using UnityEngine;
+
 
 public class EnemyController : MonoBehaviour
 {
@@ -22,6 +24,7 @@ public class EnemyController : MonoBehaviour
     private void Update()
     {
         GoalKeeperMove();
+        
     }
     private void GoalKeeperMove()
     {
@@ -36,5 +39,12 @@ public class EnemyController : MonoBehaviour
     {
         Debug.DrawRay(checkColision.position, direction * rayLength, color);
         return Physics2D.Raycast(checkColision.position, direction, rayLength, layer);
+    }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Ball"))
+        {
+            AudioManager.Instance.PlayStopBall();
+        }
     }
 }
