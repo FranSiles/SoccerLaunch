@@ -15,7 +15,7 @@ public class AudioManager : MonoBehaviour
 
     private void Awake()
     {
-        PlayerPrefs.DeleteAll();
+        //PlayerPrefs.DeleteAll();
         if (Instance != null)
         {
             Destroy(this.gameObject);
